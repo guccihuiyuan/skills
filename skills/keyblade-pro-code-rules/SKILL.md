@@ -163,8 +163,24 @@ const status = EStatus.All
 
 ## 自动导入【Vue3 专属】
 
-- `vue`、`pinia` 中的 API（如 `ref`、`computed`、`defineProps` 等）**无需手动导入**
-- 项目已配置自动导入插件
+项目已配置 `unplugin-auto-import` 插件，Vite 会自动注入以下 API，**代码中禁止显式导入**：
+
+- `vue`：`ref`、`reactive`、`computed`、`watch`、`watchEffect`、`onMounted`、`onUnmounted`、`defineProps`、`defineEmits`、`defineExpose` 等
+- `pinia`：`defineStore`、`storeToRefs` 等
+- `vue-router`：`useRoute`、`useRouter` 等
+
+**错误示例：**
+```ts
+import { ref, computed } from 'vue'        // 禁止
+import { defineStore } from 'pinia'        // 禁止
+import { useRoute } from 'vue-router'      // 禁止
+```
+
+**正确示例：**
+```ts
+const count = ref(0)                       // 直接可用
+const double = computed(() => count.value * 2)
+```
 
 ## 表单规范【Vue3 专属】
 
