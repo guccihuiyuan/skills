@@ -42,7 +42,7 @@ vue3 + TypeScript + vite + arco design + unocss
 ### 表格列定义
 
 - 使用 `IProTableColumn` 类型
-- 字段名使用枚举 `EUserFieldName.xxx` 而非字符串
+- 字段名使用字符串，方便编辑器可以点击跳转到定义处
 - 通过 `setColumnAlign(columns, 'center')` 设置默认居中
 
 ## 组件规范【Vue3 专属】
@@ -144,7 +144,6 @@ export enum EUserManagementUM {
 ## 类型规范【通用】
 
 - 状态切换、选项值等**禁止使用字符串字面量**，必须定义枚举
-- 模板中绑定的字段值使用枚举引用，如 `EUserFieldName.name`
 - 下拉选项使用 `ValueMap` 或 `Dict` 结构，配合 `tag-enum` 组件展示
 
 **错误示例：**
@@ -170,7 +169,6 @@ const status = EStatus.All
 ## 表单规范【Vue3 专属】
 
 - 使用 `a-form` + `useForm` 组合
-- 字段绑定使用枚举 `EUserFieldName.xxx`
 - 校验规则必须写 `message` 提示
 - 弹窗表单需暴露 `submit` 和 `beforeCancel` 方法
 
@@ -179,6 +177,13 @@ const status = EStatus.All
 - **禁止使用驼峰命名（camelCase）**
 - 文件名使用短横线分隔（kebab-case）
 - 示例：`user-management` ✓，`userManagement` ✗
+
+## ESLint 规范【通用】
+
+- 生成的代码必须符合目标项目的 ESLint 配置
+- 使用项目根目录下的 `.eslintrc` 或 `.eslintrc.*` 或 `eslint.config.*` 文件定义的规则
+- 避免产生任何 ESLint 警告或错误
+- 代码格式需通过项目的 lint 命令校验
 
 ## 注释规范【通用】
 
