@@ -12,7 +12,7 @@ npx skills add https://github.com/guccihuiyuan/skills --skill keyblade-pro-rules
 
 ### keyblade-pro-workflow
 
-工作流skill，封装了keyblade-pro的工作流，先使用 brainstorming 进行头脑风暴，在使用 ` writing-plans` 制定计划，最后使用 `keyblade-pro-code-rules` 生成符合规则的AI代码。如果是一个简单的需求，可以直接使用 `keyblade-pro-code-rules` 即可。
+工作流skill，封装了keyblade-pro的工作流，先使用 brainstorming 进行头脑风暴，在使用 ` writing-plans` 制定计划，再使用 `executing-plans` 执行计划并跟踪进度，最后使用 `keyblade-pro-code-rules` 生成符合规则的AI代码。如果是一个简单的需求，可以直接使用 `keyblade-pro-code-rules` 即可。
 
 ```shell
 npx skills add https://github.com/guccihuiyuan/skills --skill keyblade-pro-workflow

@@ -1,7 +1,7 @@
 ---
 name: keyblade-pro-workflow
 description: >
-  AI代码编写工作流编排器，严格按照 brainstorming -> writing-plans -> keyblade-pro-code-rules 的顺序执行。
+  AI代码编写工作流编排器，严格按照 brainstorming -> writing-plans -> executing-plans -> keyblade-pro-code-rules 的顺序执行。
   每个步骤执行前和执行后均需用户确认，确认环节不跳过、不自动默认。
   支持技能检测，若依赖技能不存在则自动跳过该环节并继续后续流程。
 ---
@@ -13,7 +13,7 @@ description: >
 这是一个**严格的工作流编排器**，用于协调多个技能完成AI代码编写任务。核心原则是：
 
 1. **不要一上来就写代码**：必须先进行需求分析和计划制定
-2. **严格顺序执行**：必须按照 brainstorming → writing-plans → keyblade-pro-code-rules 的顺序执行
+2. **严格顺序执行**：必须按照 brainstorming → writing-plans → executing-plans → keyblade-pro-code-rules 的顺序执行
 3. **用户确认必需**：每个步骤执行前和执行后均需用户确认，**不跳过、不自动默认**
 
 **核心特性：**
@@ -82,9 +82,35 @@ description: >
 - 若 `writing-plans` 技能不存在，提示："未检测到 writing-plans 技能，将跳过计划制定环节"
 - 自动进入下一步
 
-### 步骤 3：代码编写 (keyblade-pro-code-rules)
+### 步骤 3：计划执行 (executing-plans)
 
-**计划制定完成后，执行前检测 `keyblade-pro-code-rules` 技能是否存在**
+**计划制定完成后，执行前检测 `executing-plans` 技能是否存在**
+
+**执行内容：**
+- 按照计划逐步执行任务
+- 跟踪任务进度和完成状态
+- 管理任务间的依赖关系
+- 协调多步骤任务的执行顺序
+
+**输出要求：**
+- 任务执行进度报告
+- 已完成任务清单
+- 执行过程中的问题记录
+
+**用户交互（必需）：**
+- **执行前询问**："即将开始执行开发计划，是否确认执行？"
+  - 用户选择：确认继续 / 返回上一步 / 取消终止
+- **执行中反馈**：定期向用户汇报任务执行进度
+- **执行后确认**："计划执行已完成，共执行了 [N] 个任务。执行摘要：\n[摘要内容]\n\n请问您是否确认执行结果？"
+  - 用户选择：确认继续 / 重新执行 / 调整计划后重试
+
+**技能缺失处理：**
+- 若 `executing-plans` 技能不存在，提示："未检测到 executing-plans 技能，将跳过计划执行环节"
+- 自动进入下一步
+
+### 步骤 4：代码编写 (keyblade-pro-code-rules)
+
+**计划执行完成后，执行前检测 `keyblade-pro-code-rules` 技能是否存在**
 
 **执行内容：**
 - 按照项目规范编写代码
@@ -107,7 +133,7 @@ description: >
 - 若 `keyblade-pro-code-rules` 技能不存在，提示："未检测到 keyblade-pro-code-rules 技能，将跳过代码编写环节"
 - 自动进入下一步
 
-### 步骤 4：代码审查与验证
+### 步骤 5：代码审查与验证
 
 **代码编写完成后执行**
 
@@ -122,7 +148,7 @@ description: >
 - **执行后反馈**："代码审查完成，发现 [N] 个问题：\n[问题摘要]\n\n是否需要我修复这些问题？"
   - 用户选择：修复问题 / 跳过修复 / 手动处理
 
-### 步骤 5：最终确认与交付
+### 步骤 6：最终确认与交付
 
 **所有步骤完成后执行**
 
@@ -137,7 +163,7 @@ description: >
 ## 工作流约束
 
 ### 必须遵守的规则
-1. **严格顺序执行**：必须按照 brainstorming → writing-plans → keyblade-pro-code-rules 的顺序执行
+1. **严格顺序执行**：必须按照 brainstorming → writing-plans → executing-plans → keyblade-pro-code-rules 的顺序执行
 2. **不要一上来就写代码**：必须先进行需求分析和计划制定
 3. **技能检测优先**：每个步骤执行前必须检测依赖技能是否存在
 4. **用户确认必需**：每个步骤执行前和执行后均需用户确认，**不跳过、不自动默认**
@@ -148,18 +174,18 @@ description: >
 ### 步骤间的依赖关系
 
 ```
-brainstorming ──(确认)──→ writing-plans ──(确认)──→ keyblade-pro-code-rules
-       │                       │                        │
-       ▼                       ▼                        ▼
-  需求分析(可选)          计划制定(可选)            代码编写(可选)
-       │                       │                        │
-       └───────────────────────┴────────────────────────┘
-                              │
-                              ▼
-                       代码审查与验证
-                              │
-                              ▼
-                         最终交付
+brainstorming ──(确认)──→ writing-plans ──(确认)──→ executing-plans ──(确认)──→ keyblade-pro-code-rules
+       │                       │                        │                           │
+       ▼                       ▼                        ▼                           ▼
+  需求分析(可选)          计划制定(可选)           计划执行(可选)              代码编写(可选)
+       │                       │                        │                           │
+       └───────────────────────┴────────────────────────┴───────────────────────────┘
+                                                              │
+                                                              ▼
+                                                       代码审查与验证
+                                                              │
+                                                              ▼
+                                                         最终交付
 ```
 
 ### 完整工作流流程图
@@ -186,6 +212,12 @@ brainstorming ──(确认)──→ writing-plans ──(确认)──→ keyb
     └── 不存在 ──→ 提示跳过 ──→ 进入下一步
             │
             ▼
+检测 executing-plans 技能
+    │
+    ├── 存在 ──→ 询问用户 ──→ 执行计划执行 ──→ 询问确认 ──→ 进入下一步
+    └── 不存在 ──→ 提示跳过 ──→ 进入下一步
+            │
+            ▼
 检测 keyblade-pro-code-rules 技能
     │
     ├── 存在 ──→ 询问用户 ──→ 执行代码编写 ──→ 询问确认 ──→ 进入下一步
@@ -206,8 +238,9 @@ brainstorming ──(确认)──→ writing-plans ──(确认)──→ keyb
 | 技能名称 | 用途 | 调用时机 | 检测与跳过 |
 |---------|------|---------|-----------|
 | `brainstorming` | 需求分析和方案设计 | 工作流第一步 | 不存在时跳过，进入计划制定 |
-| `writing-plans` | 创建开发计划和任务列表 | 需求分析完成后 | 不存在时跳过，进入代码编写 |
-| `keyblade-pro-code-rules` | 代码编写和规范检查 | 计划制定完成后 | 不存在时跳过，进入代码审查 |
+| `writing-plans` | 创建开发计划和任务列表 | 需求分析完成后 | 不存在时跳过，进入计划执行 |
+| `executing-plans` | 执行开发计划并跟踪进度 | 计划制定完成后 | 不存在时跳过，进入代码编写 |
+| `keyblade-pro-code-rules` | 代码编写和规范检查 | 计划执行完成后 | 不存在时跳过，进入代码审查 |
 
 ## Vue3 + TypeScript + Arco Design 项目特殊处理
 
@@ -226,6 +259,7 @@ brainstorming ──(确认)──→ writing-plans ──(确认)──→ keyb
 ### 每个步骤必须输出
 - **brainstorming**：需求文档、技术方案
 - **writing-plans**：任务列表、优先级排序
+- **executing-plans**：执行进度报告、完成任务清单
 - **keyblade-pro-code-rules**：代码文件、测试文件
 
 ### 最终交付
@@ -260,7 +294,7 @@ brainstorming ──(确认)──→ writing-plans ──(确认)──→ keyb
 
 ## 最佳实践
 
-1. **严格遵循流程**：必须按照 brainstorming → writing-plans → keyblade-pro-code-rules 的顺序执行
+1. **严格遵循流程**：必须按照 brainstorming → writing-plans → executing-plans → keyblade-pro-code-rules 的顺序执行
 2. **不要急于编码**：充分的需求分析和计划制定是高质量代码的基础
 3. **强制用户确认**：每个步骤都必须获得用户确认才能继续
 4. **文档驱动**：每个步骤都要有明确的输出文档
