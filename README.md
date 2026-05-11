@@ -25,3 +25,11 @@ uniapp项目代码规则skill，封装了uniapp的代码规则，生成代码时
 ```shell
 npx skills add https://github.com/guccihuiyuan/skills --skill uniapp-vue3-code-rules
 ```
+
+### midscene-testing-rules
+
+uniapp项目代码规则skill，封装了uniapp的代码规则，生成代码时候必须满足这些规则。
+
+```shell
+npx skills add https://github.com/guccihuiyuan/skills --skill midscene-testing-rules
+```
