@@ -7,7 +7,7 @@
 pc项目代码规则skill，封装了keyblade-pro的代码规则，生成代码时候必须满足这些规则。
 
 ```shell
-npx skills add https://github.com/guccihuiyuan/skills --skill keyblade-pro-rules
+npx skills add https://github.com/guccihuiyuan/skills --skill keyblade-pro-code-rules
 ```
 
 ### keyblade-pro-workflow
