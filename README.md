@@ -1,6 +1,6 @@
 # skills
 
-## 安装
+## 安装skills
 
 ### keyblade-pro-code-rules
 
@@ -32,4 +32,9 @@ uniapp项目代码规则skill，封装了uniapp的代码规则，生成代码时
 
 ```shell
 npx skills add https://github.com/guccihuiyuan/skills --skill midscene-testing-rules
+```
+
+## 更新skill
+```shell
+npx skills update
 ```
