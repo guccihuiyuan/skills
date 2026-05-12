@@ -1,5 +1,5 @@
 ---
-name: midscene-testing
+name: midscene-testing-rules
 description: |
   约束基于 Midscene.js 的自动化测试用例写法规范，特别是 Android 微信小程序环境的兼容处理。
   当用户需要编写、修改或审查 Midscene.js 测试脚本、测试用例时，务必使用此 skill。
