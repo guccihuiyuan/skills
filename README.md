@@ -34,7 +34,7 @@ uniapp项目代码规则skill，封装了uniapp的代码规则，生成代码时
 npx skills add https://github.com/guccihuiyuan/skills --skill midscene-testing-rules
 ```
 
-## 更新skill
+## 更新skills
 ```shell
 npx skills update
 ```
