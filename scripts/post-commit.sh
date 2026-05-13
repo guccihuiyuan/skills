@@ -2,23 +2,19 @@
 
 DING_WEBHOOK="https://oapi.dingtalk.com/robot/send?access_token=fa90e3077e423ee233192ce3ed31a862c58fc4e8c3dac101e63a3ab6b204d854"
 
-# 检查本次提交是否包含 CHANGELOG.md 或 skills 目录下的文件
+# 检查本次提交是否包含 skills 目录下的文件
 if ! git diff-tree --no-commit-id --name-only -r HEAD | grep -q -E "^skills/"; then
   exit 0
 fi
 
-echo "到这里了"
+# 获取 skills 目录下的变更文件列表
+CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r HEAD | grep "^skills/" | head -10)
 
-# 提取最新一条变更内容（第一个 ## 之后到下一个 ## 之前）
-CONTENT=$(git show HEAD:CHANGELOG.md | awk '
-  BEGIN { flag=0 }
-  /^## / {
-    if (flag == 1) exit
-    flag = 1
-    next
-  }
-  flag { print }
-')
+# 格式化变更内容
+CONTENT=""
+while IFS= read -r file; do
+  CONTENT="${CONTENT}- ${file}\n"
+done <<< "$CHANGED_FILES"
 
 # 空内容则跳过
 [ -z "$CONTENT" ] && exit 0
