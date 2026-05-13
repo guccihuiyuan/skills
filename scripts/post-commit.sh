@@ -7,6 +7,8 @@ if ! git diff-tree --no-commit-id --name-only -r HEAD | grep -q -E "^skills/"; t
   exit 0
 fi
 
+echo "到这里了"
+
 # 提取最新一条变更内容（第一个 ## 之后到下一个 ## 之前）
 CONTENT=$(git show HEAD:CHANGELOG.md | awk '
   BEGIN { flag=0 }
