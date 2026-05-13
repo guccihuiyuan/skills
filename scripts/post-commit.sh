@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DING_WEBHOOK="https://oapi.dingtalk.com/robot/send?access_token=ab48f8ca425f43717f4e665f79dfe1aeb5b31054b24894eb85f0cb44e9b215c2"
+DING_WEBHOOK="https://oapi.dingtalk.com/robot/send?access_token=fa90e3077e423ee233192ce3ed31a862c58fc4e8c3dac101e63a3ab6b204d854"
 
 # 检查本次提交是否包含 CHANGELOG.md
 if ! git diff-tree --no-commit-id --name-only -r HEAD | grep -q "^CHANGELOG.md$"; then
