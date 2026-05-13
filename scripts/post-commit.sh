@@ -1,5 +1,7 @@
 #!/bin/sh
 
+echo "Hello World"
+
 DING_WEBHOOK="https://oapi.dingtalk.com/robot/send?access_token=fa90e3077e423ee233192ce3ed31a862c58fc4e8c3dac101e63a3ab6b204d854"
 
 # 检查本次提交是否包含 CHANGELOG.md
