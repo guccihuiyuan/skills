@@ -501,6 +501,49 @@ import { useNavbarContent } from '@/core/hooks'
 const { statusBarHeight, navBarHeight, paddingRight } = useNavbarContent()
 ```
 
+### 定时器规范
+
+**禁止使用原生 `setInterval`，必须使用 `@foundbyte/uni-hooks` 提供的 `useInterval`**。
+
+`useInterval` 将定时器封装为响应式 Composable，支持通过 ref 动态控制间隔时间，并在组件卸载时自动清理，避免内存泄漏。
+
+**正确示例：**
+
+```ts
+import { useInterval } from '@foundbyte/uni-hooks'
+
+// interval 为 ref<number>()，赋值后启动定时器
+const interval = ref<number>()
+
+useInterval(() => {
+  // 定时执行的逻辑
+  autoScroll()
+}, interval)
+
+// 动态启动/变更间隔
+interval.value = 3000
+
+// 暂停定时器
+interval.value = undefined
+```
+
+**错误示例：**
+
+```ts
+// 禁止直接使用 setInterval
+const timer = setInterval(() => {
+  autoScroll()
+}, 3000)
+
+// 禁止直接使用 setTimeout 循环模拟定时器
+const loop = () => {
+  setTimeout(() => {
+    autoScroll()
+    loop()
+  }, 3000)
+}
+```
+
 ### 自定义 Hooks 开发规范
 
 如需在页面或子包中自定义 hooks：
