@@ -544,6 +544,28 @@ const loop = () => {
 }
 ```
 
+### 系统信息获取规范
+
+**禁止使用 `uni.getWindowInfo()`，必须使用 `@foundbyte/uni-hooks` 提供的 `getSystemInfoSync`**。
+
+`getSystemInfoSync` 是对 `uni.getWindowInfo()` 的封装，提供统一的系统信息获取方式，避免平台差异和异步回调问题。
+
+**正确示例：**
+
+```ts
+import { getSystemInfoSync } from '@foundbyte/uni-hooks'
+
+const { windowWidth, windowHeight, statusBarHeight } = getSystemInfoSync()
+```
+
+**错误示例：**
+
+```ts
+// 禁止直接使用 uni.getWindowInfo()
+const info = uni.getWindowInfo()
+const width = info.windowWidth
+```
+
 ### 自定义 Hooks 开发规范
 
 如需在页面或子包中自定义 hooks：
