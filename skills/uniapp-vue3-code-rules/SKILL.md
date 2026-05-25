@@ -613,7 +613,7 @@ import { http, request } from '@/core/apis'
 1. **异常处理**：每个请求函数必须 try/catch 包裹，错误处理在 service 层完成
 2. **状态码判断**：成功/失败必须使用 `EResCode` 枚举值，如 `res?.code === EResCode.success`
 3. **类型推导**：已知返回值类型时，优先使用 `http<T>` 泛型声明，让 TypeScript 自动推导
-4. **数据处理**：格式转换、错误处理等逻辑尽量放到 service 层，减少页面层代码量
+4. **错误处理统一收口**：`Message.error`、`uni.showToast`、`uni.showModal` 等错误提示调用**禁止出现在页面/组件层**，必须在 service 层统一处理。页面层仅接收处理后的数据或布尔结果，不感知错误提示细节
 
 ```ts
 // src/core/service/home.ts
@@ -687,6 +687,12 @@ if (res?.code === 200) {
 // 未声明泛型类型
 const res = await http('/api/list', 'GET')
 const list = res.data as IListItem[] // 避免手动类型断言
+
+// 页面层直接调用错误提示 — 禁止
+const res = await getHomeData()
+if (!res) {
+  Message.error('获取数据失败')
+}
 ```
 
 ### 请求选项
