@@ -79,7 +79,7 @@ vue3 + TypeScript + vite + arco design + unocss
 4. **try/catch 包裹**：每个请求函数必须 try/catch，错误处理在 request 层完成
 5. **错误码判断**：成功/失败必须使用 `EResponseCode` 枚举值，如 `res?.code === EResponseCode.success`
 6. **类型声明**：已知返回值类型时必须显式声明到 `getRequest<T>` / `postRequest<T>` 中，优先让 TypeScript 自动推导
-7. **数据处理**：格式转换、错误处理等逻辑尽量放到 request 层，减少渲染层代码量
+7. **错误处理统一收口**：`Message.error`、`Message.info`、`Modal.error` 等错误提示调用**禁止出现在页面/组件层**，必须在 request 层统一处理。渲染层仅接收处理后的数据或布尔结果，不感知错误提示细节
 
 **示例：**
 ```ts
@@ -110,6 +110,16 @@ export namespace ExampleRequest {
     } catch {}
     return false
   }
+}
+```
+
+**错误示例：**
+
+```ts
+// 页面层直接调用错误提示 — 禁止
+const list = await ExampleRequest.listPage(params)
+if (!list) {
+  Message.error('获取数据失败')
 }
 ```
 
