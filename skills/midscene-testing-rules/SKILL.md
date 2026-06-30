@@ -63,31 +63,31 @@ export default {
 5. 错误处理：`throw new Error('描述', { cause: error })`，cause 必须保留。catch 中建议先用 `console.error('❌ ...', error)` 输出，方便调试时查看完整错误堆栈
 6. 所有 AI 操作传 `{ deepThink: false }` 提升速度
 
-## Android 平台特殊规范（重点）
+## Android/iOS 平台特殊规范（重点）
 
-### 输入：禁止 `agent.aiInput`，必须用 `adbInput`
+### 输入：禁止 `agent.aiInput`，必须用 `aiInput`
 
-微信小程序沙箱环境导致 `agent.aiInput` 异常，必须使用团队封装的 `adbInput`：
+微信小程序沙箱环境导致 `agent.aiInput` 异常，必须使用团队封装的 `aiInput`：
 
 ```ts
 // ❌ 错误
 await agent.aiInput("用户名输入框", "admin");
 
 // ✅ 正确
-import { adbInput } from "@/tests/utils/android";
-await adbInput("用户名输入框", "admin");
+import { aiInput } from "@/tests/utils/mobile";
+await aiInput("用户名输入框", "admin");
 ```
 
 ### 常用封装
 
 ```ts
-import {
-  openApp, // 打开 config.ts 配置的 App
-  openWxMiniprogram, // 打开 config.ts 配置的微信小程序
-  adbTap, // UI 坐标系点击
-  adbInput, // 绕过小程序限制的输入
+import { 
+  adbTap,     // UI 坐标系点击
+  aiInput,    // 绕过小程序限制的输入
   testSignIn, // 检查并自动登录
-} from "@/tests/utils/android";
+  openApp,    // 打开 config.ts 配置的 App
+  openWxMiniprogram, // 打开 config.ts 配置的微信小程序
+} from "@/tests/utils/mobile";
 import { sleep } from "@/tests/utils";
 ```
 
@@ -151,7 +151,7 @@ export default {
 
 ```ts
 import { AndroidAgent } from "@midscene/android";
-import { testSignIn } from "@/tests/utils/android";
+import { testSignIn } from "@/tests/utils/mobile";
 import { sleep } from "@/tests/utils";
 
 export default {
