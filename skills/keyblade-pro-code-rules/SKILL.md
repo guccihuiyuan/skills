@@ -32,6 +32,7 @@ vue3 + TypeScript + vite + arco design + unocss
 3. **弹窗式编辑优先**：新增、编辑操作建议使用弹窗式实现（`save.modalComponent` 配置）
 4. **表单尽量使用 `useForm`**，从 `@/hooks` 导入
 5. 多表格页面必须拆分为多个独立组件
+6. 如果操作栏按钮个数<=4，正常使用文字按钮，否则使用 `tooltip-button` 组件
 
 ### useTable 配置要点
 
