@@ -52,7 +52,8 @@ vue3 + TypeScript + vite + arco design + unocss
 - 自定义组件需类型完备，props 必须声明类型和必要的注释
 
 ## 样式规范【Vue3 专属】
-
+- 上下间隔左右优先使用 `<a-span>` 组件
+- 文字优先使用 `<a-typography-text>` 组件
 - **优先使用 unocss**，避免在 `<style>` 标签中定义 class
 - arco design 组件上使用 unocss 时，若出现样式覆盖冲突，加 `!` 前缀强制生效
 - 示例：`<a-button class="!bg-red-500">`
