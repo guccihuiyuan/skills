@@ -201,6 +201,16 @@ const double = computed(() => count.value * 2)
 - 弹窗表单需暴露 `submit` 和 `beforeCancel` 方法
 - 例如 `手机号、姓名` 等这些通用规则单独写在一个文件存放，全局共用，其他表单规则直接写在 <form-item> 模板里面
 
+## defineEmits
+- 需要使用对象形式
+- 如有参数，需要声明参数及其类型
+例如：
+```ts
+const emits = defineEmits<{
+  (e: 'select', v: number): void
+}>()
+```
+
 ## 文件命名规范【通用】
 
 - **禁止使用驼峰命名（camelCase）**
