@@ -111,6 +111,9 @@ module.exports = {
     'selector-id-pattern': null,
     'import-notation': null,
     'no-empty-source': null,
+    // 条件编译(// #ifdef / // #endif)会在同一条规则内按平台写重复属性，属合法用法；
+    // 该规则的 --fix 会直接删除“重复”声明，必须关闭
+    'declaration-block-no-duplicate-properties': null,
     'no-duplicate-selectors': null,
     'no-descending-specificity': null,
     'block-no-empty': null,
@@ -241,8 +244,22 @@ globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**', 'scripts/**', '
       { groupName: 'parent-4', elementNamePattern: '^(\\.\\./){4}(?!\\.)' },
     ],
     internalPattern: ['^@/', '^~/'],
+    // 遇到注释就分区，分区之间不互相排序，防止条件编译(#ifdef/#endif)里的 import 被移动
+    partitionByComment: true,
     newlinesBetween: 'never',
   },
+],
+```
+
+同时给已有的 `padding-line-between-statements` 追加 import 块后强制空行（与已有的 function/class 条目合并）：
+
+```ts
+'padding-line-between-statements': [
+  'error',
+  { blankLine: 'always', prev: ['function', 'class'], next: ['function', 'class'] },
+  // import 块之后必须空一行
+  { blankLine: 'always', prev: 'import', next: '*' },
+  { blankLine: 'any', prev: 'import', next: 'import' },
 ],
 ```
 
@@ -343,7 +360,7 @@ pnpm -C web dev
 1. `@foundbyte/eslint-plugin` 的新规则 `@foundbyte/require-json-parse-type` 和 `@foundbyte/no-restricted-literal-types` 可能在现有代码中引发大量 error，升级后需要按项目实际情况逐步修复或临时关闭。
 2. `eslint-plugin-unicorn` 的 `filename-case` 规则会强制文件名使用 kebab-case，如果项目存在大量 camelCase / PascalCase 文件，需要批量重命名或在规则中增加 `ignore` 项。
 3. Stylelint 新增后，保存时可能会对历史 Vue/Less 文件进行大量格式化改动，建议先全量跑一次 `pnpm stylelint --fix` 再提交。
-4. `perfectionist/sort-imports` 会对所有文件的 import 顺序做强制重排（含自动 fix），升级后需要全量执行 `pnpm eslint --fix`，并人工检查被移动的 import 是否引入副作用顺序问题（项目内 import 均为无副作用的纯导入时安全）。
+4. `perfectionist/sort-imports` 会对所有文件的 import 顺序做强制重排（含自动 fix），升级后需要全量执行 `pnpm eslint --fix`，并人工检查被移动的 import 是否引入副作用顺序问题（项目内 import 均为无副作用的纯导入时安全）。已配置 `partitionByComment: true`：注释（如 uni-app 条件编译的 `#ifdef` / `#endif`）会把 import 划分为独立分区，分区之间不会互相排序，条件编译块内的 import 不会被移出块外，但仍会在块内按规则排序（不影响条件编译逻辑）。
 5. `@keyblade/vite-plugin-vue-pro` 从 1.0.10 升级到 1.0.15 会附带 `@foundbyte/security-monitor-usage@1.0.7-alpha.0`，构建时需要外网 curl，因此 Dockerfile 必须同步安装 curl。
 
 ## 备注
@@ -353,5 +370,6 @@ pnpm -C web dev
 历史同步记录：
 - `ff33ad1`（2026-08-26）：新增 `@foundbyte/no-restricted-literal-types` 规则，`@foundbyte/eslint-plugin` 升级至 `^1.1.5-alpha.1`。
 - `213ec73`（2026-09-09）：新增 `eslint-plugin-perfectionist@^4.15.1` 及 `perfectionist/sort-imports` import 排序规则。
+- 2026-09-10：`perfectionist/sort-imports` 新增 `partitionByComment: true`（保护 uni-app 条件编译块的 import 不被移出）；`padding-line-between-statements` 新增 import 块后强制空行规则；stylelint 关闭 `declaration-block-no-duplicate-properties`（其 --fix 会删除条件编译块内按平台重复的属性），scss 项目额外关闭 `scss/double-slash-comment-empty-line-before`（防止在 `// #endif` 等注释前插空行）。
 
 在目标项目中执行时，若结构不同（如无 `web/` 子包、非 Vue 项目、使用 npm/yarn），应仅抽取适用的子集，不要机械照搬。
