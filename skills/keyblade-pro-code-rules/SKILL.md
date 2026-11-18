@@ -209,10 +209,73 @@ export enum EUserManagementUM {
 }
 ```
 
+## 枚举字典与状态展示规范【Vue3 专属】
+
+状态、类型、选项等枚举值一律通过 `createEnumMap`（从 `@/utils` 导入）生成"字典 + 选项"单一数据源，集中定义在所属模块的 `modules/<模块>/enum.ts`，**禁止**在 `common/dict.ts` 或组件内维护与之重复的旧 `*_OPTIONS` 数组。
+
+### createEnumMap 定义
+
+```ts
+// 返回 { valueMap: Map<T, IValueMapValue>, options: ({ key } & IValueMapValue)[] }
+// IValueMapValue = { text: string; tagColor?; badgeStatus?; badgeColor? }
+export enum ECommentAuditStatus {
+  /** 待审核 */
+  Pending = 1,
+  /** 审核通过 */
+  Passed = 2,
+  /** 审核驳回 */
+  Rejected = 3,
+}
+
+export const { valueMap: CommentStatusDict, options: CommentStatusOptions } =
+  createEnumMap<ECommentAuditStatus>([
+    { value: ECommentAuditStatus.Pending, text: '待审核', tagColor: 'orange' },
+    { value: ECommentAuditStatus.Passed, text: '审核通过', tagColor: 'green' },
+    { value: ECommentAuditStatus.Rejected, text: '审核驳回', tagColor: 'red' },
+  ])
+```
+
+- 命名约定：枚举前缀 `E`；`valueMap` 命名为 `XxxDict`，`options` 命名为 `XxxOptions`。
+- 仅需展示文案、无标签色时，可只解构 `valueMap`（如 `ShopBusinessScopeDict`）。
+
+### 1. 表格/详情状态展示：必须用 `status-enum` 组件
+
+列表列、详情中的状态标签/badge **禁止**直接写 `<a-tag>` / `<a-badge>`，统一用 `status-enum`（已全局自动导入，无需 import）：
+
+```vue
+<template #auditStatus="{ record }">
+  <status-enum :value-map="CommentStatusDict" :value-map-key="record.auditStatus" />
+</template>
+
+<!-- badge 形态 -->
+<status-enum value-type="badge" :value-map="XxxDict" :value-map-key="record.status" />
+```
+
+### 2. 下拉选项：用 `options`
+
+```vue
+<a-option
+  v-for="item in CommentStatusOptions"
+  :key="item.key"
+  :label="item.text"
+  :value="item.key"
+/>
+```
+
+### 3. 纯文本取值（详情/时间线等非标签场景）
+
+用 `Dict.get(字段)?.text`，**禁止**再用 `getDictLabel`（已废弃删除）：
+
+```vue
+{{ ShopBusinessScopeDict.get(detail?.businessScope as EShopBusinessScope)?.text || '-' }}
+```
+
+> 字段类型为 `number | undefined` 时，`Map.get` 要求枚举键，需 `as E枚举` 断言；运行时 `get(undefined)` 返回 `undefined`，再由 `|| '-'` 兜底。
+
 ## 类型规范【通用】
 
 - 状态切换、选项值等**禁止使用字符串字面量**，必须定义枚举
-- 下拉选项使用 `ValueMap` 或 `Dict` 结构，配合 `tag-enum` 组件展示
+- 下拉选项、状态标签统一走 `createEnumMap` 生成的 `Dict`/`Options`，标签展示配合 `status-enum` 组件（见"枚举字典与状态展示规范"）
 
 **错误示例：**
 ```ts
