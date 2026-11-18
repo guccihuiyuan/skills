@@ -50,13 +50,69 @@ vue3 + TypeScript + vite + arco design + unocss
 
 - 使用 arco design 组件库，文档参考 https://arco.design/vue/component
 - 自定义组件需类型完备，props 必须声明类型和必要的注释
+- 双向绑定统一使用 `defineModel`，**禁止**使用 `props + emit('update:xxx')` 手动实现
+
+**正确示例：**
+```ts
+// 子组件中直接声明双向绑定
+const modelValue = defineModel<string>({ default: '' })
+const visible = defineModel<boolean>('visible')
+```
+
+**错误示例：**
+```ts
+// 禁止：手动 props + emit('update:xxx')
+const props = defineProps<{ modelValue: string }>()
+const emit = defineEmits<{ (e: 'update:modelValue', v: string): void }>()
+```
 
 ## 样式规范【Vue3 专属】
-- 上下间隔左右优先使用 `<a-span>` 组件
-- 文字优先使用 `<a-typography-text>` 组件
+- 上下、左右间距统一使用 `<a-space>` 组件，避免用 margin/padding 模拟间距
+- 文字展示优先使用 a-typography 相关组件（如 `<a-typography-text>`、`<a-typography-title>`、`<a-typography-paragraph>`）
 - **优先使用 unocss**，避免在 `<style>` 标签中定义 class
 - arco design 组件上使用 unocss 时，若出现样式覆盖冲突，加 `!` 前缀强制生效
 - 示例：`<a-button class="!bg-red-500">`
+
+## 确认操作规范【Vue3 专属】
+
+- 确认类操作（`a-popconfirm`、`a-modal` 等）使用 `on-before-ok` 属性发起数据请求，`ok` 事件只做成功后的刷新
+- `on-before-ok` 返回 Promise，组件自动处理 loading 状态；返回 `false` 或 reject 时不会关闭，可阻止后续 `ok` 触发
+- 禁止在 `ok` 事件中发起数据请求
+
+**示例：**
+```vue
+<a-popconfirm
+  content="确认删除吗？"
+  @before-ok="handleDelete"
+  @ok="refresh"
+/>
+
+<script setup lang="ts">
+// 数据请求放在 before-ok，返回布尔结果决定是否继续关闭
+const handleDelete = async () => {
+  return await ExampleRequest.remove(row.id)
+}
+
+// ok 事件仅做成功后的列表刷新
+const refresh = () => {
+  reload()
+}
+</script>
+```
+
+## 模态框规范【Vue3 专属】
+
+- 打开模态框统一使用项目内置的 `openModal` 方法，禁止手写 `a-modal` + `v-model:visible` 自行控制显隐
+- 弹窗内容以组件形式通过参数传入，标题、宽度等在 `openModal` 调用处配置
+
+**示例：**
+```ts
+openModal({
+  title: '编辑',
+  content: EditForm,
+  width: 600,
+})
+```
 
 ## 模块组织规范【通用】
 
