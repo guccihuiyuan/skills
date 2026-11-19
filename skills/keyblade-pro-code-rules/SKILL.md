@@ -275,7 +275,24 @@ export const { valueMap: CommentStatusDict, options: CommentStatusOptions } =
 ## 类型规范【通用】
 
 - 状态切换、选项值等**禁止使用字符串字面量**，必须定义枚举
+- 定义 type/interface 字段类型时，若该字段已有对应枚举，**必须使用枚举类型**，禁止用 `number` / `string` 等基础类型替代
 - 下拉选项、状态标签统一走 `createEnumMap` 生成的 `Dict`/`Options`，标签展示配合 `status-enum` 组件（见"枚举字典与状态展示规范"）
+
+**错误示例：**
+```ts
+export type ICommentC = {
+  /** 审核状态 */
+  auditStatus: number // 禁止：已有 ECommentAuditStatus 枚举
+}
+```
+
+**正确示例：**
+```ts
+export type ICommentC = {
+  /** 审核状态 */
+  auditStatus: ECommentAuditStatus
+}
+```
 
 **错误示例：**
 ```ts
