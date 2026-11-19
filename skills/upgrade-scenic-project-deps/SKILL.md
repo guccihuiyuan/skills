@@ -368,7 +368,7 @@ pnpm -C web dev
 本 skill 对应原项目 commit `b25e2597`（作者：tianmi，2026-08-31）。后续若目标项目继续升级，应以目标项目的最新提交为准。
 
 历史同步记录：
-- `ff33ad1`（2026-08-26）：新增 `@foundbyte/no-restricted-literal-types` 规则，`@foundbyte/eslint-plugin` 升级至 `^1.1.5-alpha.1`。
+- `ff33ad1`（2026-08-26）：新增 `@foundbyte/no-restricted-literal-types` 规则，`@foundbyte/eslint-plugin` 升级至 `^1.1.5-alpha.2`。
 - `213ec73`（2026-09-09）：新增 `eslint-plugin-perfectionist@^4.15.1` 及 `perfectionist/sort-imports` import 排序规则。
 - 2026-09-10：`perfectionist/sort-imports` 新增 `partitionByComment: true`（保护 uni-app 条件编译块的 import 不被移出）；`padding-line-between-statements` 新增 import 块后强制空行规则；stylelint 关闭 `declaration-block-no-duplicate-properties`（其 --fix 会删除条件编译块内按平台重复的属性），scss 项目额外关闭 `scss/double-slash-comment-empty-line-before`（防止在 `// #endif` 等注释前插空行）。
 
