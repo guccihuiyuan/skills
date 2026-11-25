@@ -49,6 +49,7 @@ vue3 + TypeScript + vite + arco design + unocss
 ## 组件规范【Vue3 专属】
 
 - 使用 arco design 组件库，文档参考 https://arco.design/vue/component
+- `a-tabs` 组件尽量加上 `lazy-load` 属性，避免非激活 tab 的内容提前渲染
 - 自定义组件需类型完备，props 必须声明类型和必要的注释
 - 双向绑定统一使用 `defineModel`，**禁止**使用 `props + emit('update:xxx')` 手动实现
 
