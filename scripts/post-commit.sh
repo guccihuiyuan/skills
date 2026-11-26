@@ -7,8 +7,8 @@ if ! git diff-tree --no-commit-id --name-only -r HEAD | grep -q -E "^skills/"; t
   exit 0
 fi
 
-# 获取本次提交信息（转义反斜杠和双引号，避免破坏 JSON）
-CONTENT=$(git log -1 --pretty=format:"%s" | sed 's/\\/\\\\/g; s/"/\\"/g')
+# 获取完整提交内容（转义反斜杠和双引号，换行转为 \n，避免破坏 JSON）
+CONTENT=$(git log -1 --pretty=format:"%B" | sed 's/\\/\\\\/g; s/"/\\"/g' | awk '{printf "%s\\n", $0}')
 
 # 空内容则跳过
 [ -z "$CONTENT" ] && exit 0
