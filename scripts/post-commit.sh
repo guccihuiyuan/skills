@@ -7,14 +7,8 @@ if ! git diff-tree --no-commit-id --name-only -r HEAD | grep -q -E "^skills/"; t
   exit 0
 fi
 
-# 获取 skills 目录下的变更文件列表
-CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r HEAD | grep "^skills/" | head -10)
-
-# 格式化变更内容
-CONTENT=""
-while IFS= read -r file; do
-  CONTENT="${CONTENT}- ${file}\n"
-done <<< "$CHANGED_FILES"
+# 获取本次提交信息（转义反斜杠和双引号，避免破坏 JSON）
+CONTENT=$(git log -1 --pretty=format:"%s" | sed 's/\\/\\\\/g; s/"/\\"/g')
 
 # 空内容则跳过
 [ -z "$CONTENT" ] && exit 0
